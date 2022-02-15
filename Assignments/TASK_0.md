@@ -5,24 +5,51 @@
 Compilez et lancez le programme.
 
 Allez dans le fichier `tower_sim.cpp` et recherchez la fonction responsable de gérer les inputs du programme.
+
+create_keystrokes()
+
 Sur quelle touche faut-il appuyer pour ajouter un avion ?
+
+Appuyer sur "c"
+
 Comment faire pour quitter le programme ?
+
+Soit appuyer sur "x" ou "q"
+
 A quoi sert la touche 'F' ?
 
-Ajoutez un avion à la simulation et attendez.
-Que est le comportement de l'avion ?
+Mettre en mode plein ecran
+
+Ajoutez un avion à la simulation et attendez. Quel est le comportement de l'avion ?
+
+Il tourne puis atterie
+
 Quelles informations s'affichent dans la console ?
 
-Ajoutez maintenant quatre avions d'un coup dans la simulation.
-Que fait chacun des avions ?
+Des messages de préventions pour dire que l'avion ajouté va atterir.
+
+Ajoutez maintenant quatre avions d'un coup dans la simulation. Que fait chacun des avions ?
+
+Continue de voler pendant que l'un d'entre eux atterie
+
 
 ## Analyse du code
 
 Listez les classes du programme à la racine du dossier src/.
 Pour chacune d'entre elle, expliquez ce qu'elle représente et son rôle dans le programme.
 
+    aircraft -> Designe un avion
+    aircraft_types -> Designe le type d'avion
+    airport -> Designe l'aéroport
+    airport_types -> Designe le type d'aéroport
+    terminal -> Recupere les informations d'actions des divers avions
+    tower -> Designe une tour
+    tower_sim -> Initialisé le simulateur
+
 Pour les classes `Tower`, `Aircaft`, `Airport` et `Terminal`, listez leurs fonctions-membre publiques et expliquez précisément à quoi elles servent.
 Réalisez ensuite un schéma présentant comment ces différentes classes intéragissent ensemble.
+
+
 
 Quelles classes et fonctions sont impliquées dans la génération du chemin d'un avion ?
 Quel conteneur de la librairie standard a été choisi pour représenter le chemin ?
