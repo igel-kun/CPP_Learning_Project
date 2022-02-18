@@ -30,6 +30,7 @@ void handle_error(const std::string& prefix, const GLenum err = glGetError());
 void keyboard(unsigned char key, int, int);
 void toggle_fullscreen();
 void change_zoom(const float factor);
+void change_framerate(int value);
 void init_gl(int argc, char** argv, const char* title);
 void loop();
 void exit_loop();

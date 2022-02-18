@@ -45,6 +45,11 @@ void change_zoom(const float factor)
     handle_error("Zoom");
 }
 
+void change_framerate(int value)
+{
+    ticks_per_sec += value;
+}
+
 void reshape_window(int w, int h)
 {
     glViewport(0, 0, w, h);
