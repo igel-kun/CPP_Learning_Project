@@ -95,5 +95,83 @@ Réalisez ensuite un schéma présentant comment ces différentes classes intér
 | move() | change le terminal si un avion y est assigné et qu'un service est en cours |
 
 >Quelles classes et fonctions sont impliquées dans la génération du chemin d'un avion ?
-Quel conteneur de la librairie standard a été choisi pour représenter le chemin ?
+
+Il y a :
+
+- la classe Aircraft : 
+    - arrive_at_terminal()
+    - add_waypoint()
+    - operate_landing_gear()
+
+- la classe waypoint
+
+- la classe tower :
+    - get_circle()
+    - get_instructions()
+
+>Quel conteneur de la librairie standard a été choisi pour représenter le chemin ?
 Expliquez les intérêts de ce choix.
+
+Le conteneur choisi est std::deque, comme l'avion va se déplacer entre plusieurs points différents, utiliser une deque plutôt qu'un vector est plus intéréssant car la deque permets un ajout et une suppression plus efficace, donc on va pouvoir ajouter et retirer des points sur la trajectoire de l'avion plus facilement.
+
+## C- Bidouillons !
+
+> Déterminez à quel endroit du code sont définies les vitesses maximales et accélération de chaque avion.
+
+Les vitesses maximales et accélération de chaque avion sont définis dans aircraft_types.hpp.
+
+> Le Concorde est censé pouvoir voler plus vite que les autres avions.
+Modifiez le programme pour tenir compte de cela.
+
+```cpp
+aircraft_types[2] = new AircraftType { /*.02f*/.05f,/*.05f*/ .08f, .02f, MediaPath { "concorde_af.png" } };
+```
+
+> Identifiez quelle variable contrôle le framerate de la simulation.
+
+La variable controlant le framerate est la variable GL::ticks_per_sec dans opengl_interface.hpp.
+
+> Ajoutez deux nouveaux inputs au programme permettant d'augmenter ou de diminuer cette valeur.
+
+```cpp
+GL::keystrokes.emplace('*', []() { GL::ticks_per_sec = std::min(GL::ticks_per_sec + 1u, 200u); });
+GL::keystrokes.emplace('/', []() { GL::ticks_per_sec = std::max(GL::ticks_per_sec - 1u, 1u); });
+```
+
+ici il s'agit de la version final, on fait un min pour l'augmentation du framerate pour éviter de trop augmenter le framerate (la valeur 200u est complètement arbitraire), de plus on fait un max pour la réduction du framerate pour éviter de passer à 0 et faire crasher l'application.
+
+> Essayez maintenant de mettre en pause le programme en manipulant ce framerate. Que se passe-t-il ?
+
+Le programme crash.
+
+> Ajoutez une nouvelle fonctionnalité au programme pour mettre le programme en pause, et qui ne passe pas par le framerate.
+
+On va d'abord créer une nouvelle variable global dans opengl_interface.hpp nommé is_paused initialiser à false. puis on va modifier la fonction timer pour qu'elle prenne en compte la variable, ce qui nous donnes :
+
+```cpp
+void timer(const int step)
+{
+    if (!is_paused)
+    {
+        for (auto& item : move_queue)
+        {
+            item->move();
+        }
+        glutPostRedisplay();
+    }
+    glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+}
+```
+
+et dans tower_sim.cpp on vas ajouter un nouvel input qui va inverser la variable is_paused :
+
+```cpp
+GL::keystrokes.emplace('p', []() { GL::is_paused = !GL::is_paused; });
+```
+
+> Identifiez quelle variable contrôle le temps de débarquement des avions et doublez-le.
+
+La variable controlant le temps de débarquement des avions est la variable SERVICE_CYCLES dans config.hpp qui était à 20u et que l'on passe donc à 40u.
+
+> Lorsqu'un avion a décollé, il réattérit peu de temps après. Faites en sorte qu'à la place, il soit retiré du programme.
+
