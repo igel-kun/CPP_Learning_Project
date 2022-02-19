@@ -45,14 +45,6 @@ void change_zoom(const float factor)
     handle_error("Zoom");
 }
 
-void change_framerate(int value)
-{
-    if (ticks_per_sec + value > 0)
-    {
-        ticks_per_sec += value;
-    }
-}
-
 void reshape_window(int w, int h)
 {
     glViewport(0, 0, w, h);
@@ -90,11 +82,6 @@ void timer(const int step)
         glutPostRedisplay();
     }
     glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
-}
-
-void pause()
-{
-    is_paused = !is_paused;
 }
 
 void init_gl(int argc, char** argv, const char* title)
