@@ -175,3 +175,74 @@ La variable controlant le temps de débarquement des avions est la variable SERV
 
 > Lorsqu'un avion a décollé, il réattérit peu de temps après. Faites en sorte qu'à la place, il soit retiré du programme.
 
+> A quel endroit pouvez-vous savoir que l'avion doit être supprimé ?
+
+On peut savoir que l'avion doit être supprimer dans la fonction get_instruction de la classe Tower.
+
+> Pourquoi n'est-il pas sûr de procéder au retrait de l'avion dans cette fonction ?
+
+On ne peut pas retirer l'avion ici car on pourrait se retrouver avec des dangling-ref.
+
+> A quel endroit de la callstack pourriez-vous le faire à la place ?
+
+On peut le faire dans la fonction Timer de la classe opengl_interface.
+
+> Que devez-vous modifier pour transmettre l'information de la première à la seconde fonction ?
+
+Tout d'abord on va créer une variable dans la classe aircrat qu'on va appelé is_service_done et l'initialisé à false.
+
+Ensuite, lorsqu'on est dans la fonction get_instruction, au moment ou l'avion doit être supprimé on va mettre cette variable à true.
+
+Puis on va modifier la fonction move de l'avion pour que lorsque is_service_done est à true elle retourne false et on ne fait pas le reste de la fonction.
+
+Pour que cela fonctionne on doit modifier la signature de move pour que cela retourne un booleén. Pour éviter les soucis, on doit modifier la signature de move pour la classe dynamic_objet et celles l'héritant (Pour toutes les classes filles on retournera juste true).
+
+Une fois que c'est fait, dans la classe timer on vas remplacer la boucle for qui va appelé la fonction move de tout les items de move_queue par une boucle for iterator.
+
+On va bouclé sur chaque item et si move renvoie true, on vas créer un pointer sur le dé-référencement de l'item et tout simplement retirer cette item de la liste et le delete (En faisant bien attention de ne pas perdre l'iterator).
+
+Ce qui nous donne ceci (je montre juste la boucle for iterator qui est plus intéréssant) :
+
+```cpp
+for (auto it = move_queue.begin(); it != move_queue.end();)
+{
+    auto* item = *it;
+    if (item->move())
+    {
+        ++it;
+    }
+    else
+    {
+        it = move_queue.erase(it);
+        delete item;
+    }
+}
+```
+
+> Lorsqu'un objet de type `Displayable` est créé, il faut ajouter celui-ci manuellement dans la liste des objets à afficher.
+Il faut également penser à le supprimer de cette liste avant de le détruire.
+Faites en sorte que l'ajout et la suppression de `display_queue` soit "automatiquement gérée" lorsqu'un `Displayable` est créé ou détruit.
+
+```cpp
+//DANS LA CLASSE DISPLAYABLE
+
+...
+Displayable(const float z_) : z { z_ } { display_queue.emplace_back(this); }
+virtual ~Displayable()
+{
+    display_queue.erase(std::find(display_queue.begin(), display_queue.end(), this));
+}
+...
+static inline std::vector<const Displayable*> display_queue;
+
+```
+
+De plus pour éviter les soucis, dans la fonction display de la classe opengl_interface, il faut faire des appelle static et non global à la liste display_queue, pour ce faire il faut juste préciser Displayable devant display_queue.
+
+> Pourquoi n'est-il pas spécialement pertinent d'en faire de même pour `DynamicObject` ?
+
+Ce n'est pas spécialement pertinant car certains objets ne vont pas forcément avoir le même comportement à leur création et leur destruction.
+
+
+
+
