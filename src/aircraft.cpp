@@ -94,7 +94,6 @@ bool Aircraft::move()
     {
         if (is_service_done)
         {
-            // RETIRER L'AVION DU PROGRAMME ???
             return false;
         }
         waypoints = control.get_instructions(*this);

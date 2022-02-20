@@ -242,7 +242,3 @@ De plus pour éviter les soucis, dans la fonction display de la classe opengl_in
 > Pourquoi n'est-il pas spécialement pertinent d'en faire de même pour `DynamicObject` ?
 
 Ce n'est pas spécialement pertinant car certains objets ne vont pas forcément avoir le même comportement à leur création et leur destruction.
-
-
-
-
