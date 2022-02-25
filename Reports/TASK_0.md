@@ -181,7 +181,7 @@ On peut savoir que l'avion doit être supprimer dans la fonction get_instruction
 
 > Pourquoi n'est-il pas sûr de procéder au retrait de l'avion dans cette fonction ?
 
-On ne peut pas retirer l'avion ici car on pourrait se retrouver avec des dangling-ref.
+On ne peut pas retirer l'avion ici car on pourrait se retrouver avec des invalidations d'iterator.
 
 > A quel endroit de la callstack pourriez-vous le faire à la place ?
 
@@ -189,11 +189,11 @@ On peut le faire dans la fonction Timer de la classe opengl_interface.
 
 > Que devez-vous modifier pour transmettre l'information de la première à la seconde fonction ?
 
-Tout d'abord on va créer une variable dans la classe aircrat qu'on va appelé is_service_done et l'initialisé à false.
+Tout d'abord on va créer une variable dans la classe aircraft qu'on va appelé has_left et l'initialisé à false.
 
 Ensuite, lorsqu'on est dans la fonction get_instruction, au moment ou l'avion doit être supprimé on va mettre cette variable à true.
 
-Puis on va modifier la fonction move de l'avion pour que lorsque is_service_done est à true elle retourne false et on ne fait pas le reste de la fonction.
+Puis on va modifier la fonction move de l'avion pour que lorsque has_left est à true elle retourne false et on ne fait pas le reste de la fonction.
 
 Pour que cela fonctionne on doit modifier la signature de move pour que cela retourne un booleén. Pour éviter les soucis, on doit modifier la signature de move pour la classe dynamic_objet et celles l'héritant (Pour toutes les classes filles on retournera juste true).
 
@@ -242,3 +242,11 @@ De plus pour éviter les soucis, dans la fonction display de la classe opengl_in
 > Pourquoi n'est-il pas spécialement pertinent d'en faire de même pour `DynamicObject` ?
 
 Ce n'est pas spécialement pertinant car certains objets ne vont pas forcément avoir le même comportement à leur création et leur destruction.
+
+> Modifiez le code afin d'utiliser un conteneur STL plus adapté. Normalement, à la fin, la fonction find_craft_and_terminal(const Aicraft&) ne devrait plus être nécessaire.
+
+on utilisera la map suivante :
+
+```cpp
+std::map<const Aircraft*, size_t>;
+```
