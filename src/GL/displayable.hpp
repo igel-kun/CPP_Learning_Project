@@ -13,7 +13,9 @@ protected:
     float z = 0;
 
 public:
-    Displayable(const float z_) : z { z_ } {}
+    Displayable(const float z_) : z { z_ } {
+
+    }
     virtual ~Displayable() {}
 
     virtual void display() const = 0;
@@ -31,6 +33,6 @@ struct disp_z_cmp
     }
 };
 
-inline std::vector<const Displayable*> display_queue;
+ inline std::vector<const Displayable*> display_queue;
 
 } // namespace GL

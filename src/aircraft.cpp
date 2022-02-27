@@ -63,7 +63,6 @@ void Aircraft::operate_landing_gear()
         if (ground_before && !ground_after)
         {
             std::cout << flight_number << " lift off" << std::endl;
-            
         }
         else if (!ground_before && ground_after)
         {
@@ -108,6 +107,7 @@ void Aircraft::move()
             if (waypoints.front().is_at_terminal())
             {
                 arrive_at_terminal();
+                //was_in_airport = true;
             }
             else
             {
@@ -121,7 +121,7 @@ void Aircraft::move()
             if (!landing_gear_deployed)
             {
                 using namespace std::string_literals;
-                throw AircraftCrash { flight_number + " crashed into the ground"s };
+                throw AircraftCrash { flight_number + " crashed into the ground" };
             }
         }
         else
@@ -133,6 +133,11 @@ void Aircraft::move()
                 pos.z() -= SINK_FACTOR * (SPEED_THRESHOLD - speed_len);
             }
         }
+
+        /*if(!is_on_ground() && was_in_airport)
+        {
+            delete this;
+        }*/
 
         // update the z-value of the displayable structure
         GL::Displayable::z = pos.x() + pos.y();
