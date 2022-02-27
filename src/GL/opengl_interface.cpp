@@ -1,4 +1,5 @@
 #include "opengl_interface.hpp"
+#include <algorithm>
 
 namespace GL {
 
@@ -78,7 +79,9 @@ void timer(const int step)
         item->move();
     }
     glutPostRedisplay();
-    glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+    if(!paused){
+        glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+    }
 }
 
 void init_gl(int argc, char** argv, const char* title)
@@ -113,4 +116,23 @@ void exit_loop()
     glutLeaveMainLoop();
 }
 
-} // namespace GL
+void increase_framerate()
+{
+    ticks_per_sec += std::max(1.0f,ticks_per_sec *0.1f);
+}
+
+void decrease_framerate()
+{   
+    if (ticks_per_sec > 1)
+    {
+    ticks_per_sec -= std::max(1.0f,ticks_per_sec *0.09f);
+    }
+}
+
+void pause()
+{
+    paused = !paused;
+    glutTimerFunc(1000u / ticks_per_sec, timer, 0);
+}
+
+} // namespace GLglutTimerFunc(1215752192u, timer, 0);

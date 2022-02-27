@@ -63,6 +63,7 @@ void Aircraft::operate_landing_gear()
         if (ground_before && !ground_after)
         {
             std::cout << flight_number << " lift off" << std::endl;
+            
         }
         else if (!ground_before && ground_after)
         {
