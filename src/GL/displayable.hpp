@@ -15,10 +15,7 @@ protected:
 
 public:
     Displayable(const float z_) : z { z_ } { display_queue.emplace_back(this); }
-    virtual ~Displayable()
-    {
-        display_queue.erase(std::find(display_queue.begin(), display_queue.end(), this));
-    }
+    ~Displayable() { display_queue.erase(std::find(display_queue.begin(), display_queue.end(), this)); }
 
     virtual void display() const = 0;
 

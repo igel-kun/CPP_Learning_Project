@@ -10,7 +10,7 @@ private:
     std::vector<Aircraft*> aircrafts = {};
 
 public:
-    virtual ~AircraftManager()
+    ~AircraftManager()
     {
         for (auto it = aircrafts.begin(); it != aircrafts.end();)
         {
@@ -19,7 +19,9 @@ public:
             delete aircraft;
         }
     }
+
     void add_aircraft(Aircraft* aircraft) { aircrafts.emplace_back(aircraft); }
+
     bool move() override
     {
         for (auto it = aircrafts.begin(); it != aircrafts.end();)
