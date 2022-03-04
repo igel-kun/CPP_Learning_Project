@@ -2,6 +2,7 @@
 
 #include "GL/opengl_interface.hpp"
 #include "aircraft.hpp"
+#include "aircraft_manager.hpp"
 #include "airport.hpp"
 #include "config.hpp"
 #include "img/image.hpp"
@@ -21,6 +22,8 @@ TowerSimulation::TowerSimulation(int argc, char** argv) :
     MediaPath::initialize(argv[0]);
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     GL::init_gl(argc, argv, "Airport Tower Simulation");
+    TowerSimulation::aircraft_manager = new AircraftManager();
+    GL::move_queue.emplace(aircraft_manager);
 
     create_keystrokes();
 }
@@ -28,6 +31,7 @@ TowerSimulation::TowerSimulation(int argc, char** argv) :
 TowerSimulation::~TowerSimulation()
 {
     delete airport;
+    delete aircraft_manager;
 }
 
 void TowerSimulation::create_aircraft(const AircraftType& type) const
@@ -40,7 +44,8 @@ void TowerSimulation::create_aircraft(const AircraftType& type) const
     const Point3D direction = (-start).normalize();
 
     Aircraft* aircraft = new Aircraft { type, flight_number, start, direction, airport->get_tower() };
-    GL::move_queue.emplace(aircraft);
+    // GL::move_queue.emplace(aircraft);
+    aircraft_manager->add_aircraft(aircraft);
 }
 
 void TowerSimulation::create_random_aircraft() const

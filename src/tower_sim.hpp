@@ -1,13 +1,15 @@
 #pragma once
 
 class Airport;
+class AircraftManager;
 struct AircraftType;
 
 class TowerSimulation
 {
 private:
-    bool help        = false;
-    Airport* airport = nullptr;
+    bool help                         = false;
+    Airport* airport                  = nullptr;
+    AircraftManager* aircraft_manager = nullptr;
 
     TowerSimulation(const TowerSimulation&) = delete;
     TowerSimulation& operator=(const TowerSimulation&) = delete;
