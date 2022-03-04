@@ -54,3 +54,8 @@ Pour le pointer sur `Aircraft` dans `Terminal`, on le fait tout simplement point
 > 4. Pourquoi n'est-il pas très judicieux d'essayer d'appliquer la même chose pour votre `AircraftManager` ?
 
 Comme nous allons probablement utiliser un container afin de stocker tous nos avions, si l'on faisait référence une case de notre container vers un nullptr, lors du parcours de ce derniers nous aurions de gros problème de nullpointer.
+
+## Objectif 1 - Usine à avions
+
+### A - Création d'une factory
+
