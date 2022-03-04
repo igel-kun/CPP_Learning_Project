@@ -16,9 +16,6 @@ using namespace std::string_literals;
 TowerSimulation::TowerSimulation(int argc, char** argv) :
     help { (argc > 1) && (std::string { argv[1] } == "--help"s || std::string { argv[1] } == "-h"s) }
 {
-    // MediaPath::initialize(argv[0]);
-    // std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    // GL::init_gl(argc, argv, "Airport Tower Simulation");
     context          = new ContextInitializer(argc, argv);
     aircraft_manager = new AircraftManager();
     aircraft_factory = new AircraftFactory();
@@ -83,7 +80,6 @@ void TowerSimulation::launch()
     }
 
     init_airport();
-    init_aircraft_types();
 
     GL::loop();
 }

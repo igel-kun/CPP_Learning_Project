@@ -2,31 +2,23 @@
 
 #include "aircraft.hpp"
 
+#include <memory>
+#include <utility>
 #include <vector>
 
 class AircraftManager : public GL::DynamicObject
 {
 private:
-    std::vector<Aircraft*> aircrafts = {};
+    std::vector<std::unique_ptr<Aircraft>> aircrafts = {};
 
 public:
-    ~AircraftManager()
-    {
-        for (auto it = aircrafts.begin(); it != aircrafts.end();)
-        {
-            auto* aircraft = *it;
-            it             = aircrafts.erase(it);
-            delete aircraft;
-        }
-    }
-
-    void add_aircraft(Aircraft* aircraft) { aircrafts.emplace_back(aircraft); }
+    void add_aircraft(std::unique_ptr<Aircraft> aircraft) { aircrafts.emplace_back(std::move(aircraft)); }
 
     bool move() override
     {
         for (auto it = aircrafts.begin(); it != aircrafts.end();)
         {
-            auto* aircraft = *it;
+            auto& aircraft = *it;
             if (aircraft->move())
             {
                 ++it;
@@ -34,7 +26,6 @@ public:
             else
             {
                 it = aircrafts.erase(it);
-                delete aircraft;
             }
         }
 
