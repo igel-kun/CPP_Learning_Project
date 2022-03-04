@@ -44,7 +44,13 @@ On détruit les avions dans la fonction `timer()` de la classe `opengl_interface
 > 2. Quelles autres structures contiennent une référence sur un avion au moment où il doit être détruit ?
 
 Au moment ou on doit détruire l'avion, ce dernier est référencé dans la map `AircraftToTerminal` de la classe tower. (bien qu'on pense à l'en retirer à ce moment précis).
+Il y aussi la classe `Terminal` qui possède une référence sur un avion, (bien que l'on pense à le déréférencer avant)
 
 > 3. Comment fait-on pour supprimer la référence sur un avion qui va être détruit dans ces structures ?
 
+En passant par des parcours par iterator, on peut supprimer l'avion en question en utilisant la méthode `erase` qui va ainsi retirer l'avion proprement de la structure et retourner le nouvel iterator afin de re-valider l'iteration sur la structure.
+Pour le pointer sur `Aircraft` dans `Terminal`, on le fait tout simplement pointer vers un `nullptr`.
+
 > 4. Pourquoi n'est-il pas très judicieux d'essayer d'appliquer la même chose pour votre `AircraftManager` ?
+
+Comme nous allons probablement utiliser un container afin de stocker tous nos avions, si l'on faisait référence une case de notre container vers un nullptr, lors du parcours de ce derniers nous aurions de gros problème de nullpointer.
