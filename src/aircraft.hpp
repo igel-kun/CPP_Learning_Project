@@ -20,14 +20,12 @@ private:
     Tower& control;
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
-    int del_pos;
-    //bool was_in_airport = false;
+    bool was_at_airport;
 
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the
-    // right way to this end, we try to face the point Z on the line spanned by
-    // the next two waypoints such that Z's distance to the next waypoint is
+    // right way to this end,(!landing_gear_deployed) such that Z's distance to the next waypoint is
     // half our distance so: |w1 - pos| = d and [w1 - w2].normalize() = W and Z
     // = w1 + W*d/2
     void turn_to_waypoint();
@@ -44,7 +42,6 @@ private:
     bool is_on_ground() const { return pos.z() < DISTANCE_THRESHOLD; }
     float max_speed() const { return is_on_ground() ? type.max_ground_speed : type.max_air_speed; }
 
-    Aircraft(const Aircraft&) = delete;
     Aircraft& operator=(const Aircraft&) = delete;
 
 public:
@@ -57,14 +54,9 @@ public:
         speed { speed_ },
         control { control_ }
     {
-        del_pos = GL::display_queue.size();
-        GL::display_queue.emplace_back(this);
         speed.cap_length(max_speed());
     }
 
-    ~Aircraft() {
-        GL::display_queue.erase(GL::display_queue.begin()+del_pos);
-    }
 
     const std::string& get_flight_num() const { return flight_number; }
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
@@ -72,5 +64,16 @@ public:
     void display() const override;
     void move() override;
 
+    bool del_object() const override
+    {
+        if(was_at_airport && !landing_gear_deployed)
+        {
+            return true;
+        }
+        return false;
+    }
+
     friend class Tower;
+
+    Aircraft(const Aircraft&) = default;
 };

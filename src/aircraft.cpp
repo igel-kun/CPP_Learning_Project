@@ -49,6 +49,7 @@ void Aircraft::arrive_at_terminal()
     // we arrived at a terminal, so start servicing
     control.arrived_at_terminal(*this);
     is_at_terminal = true;
+    was_at_airport = true;
 }
 
 // deploy and retract landing gear depending on next waypoints
@@ -107,7 +108,6 @@ void Aircraft::move()
             if (waypoints.front().is_at_terminal())
             {
                 arrive_at_terminal();
-                //was_in_airport = true;
             }
             else
             {
@@ -133,11 +133,6 @@ void Aircraft::move()
                 pos.z() -= SINK_FACTOR * (SPEED_THRESHOLD - speed_len);
             }
         }
-
-        /*if(!is_on_ground() && was_in_airport)
-        {
-            delete this;
-        }*/
 
         // update the z-value of the displayable structure
         GL::Displayable::z = pos.x() + pos.y();

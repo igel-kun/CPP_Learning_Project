@@ -37,5 +37,6 @@ void exit_loop();
 void decrease_framerate();
 void increase_framerate();
 void pause();
+void del_aircraft();
 
 } // namespace GL
