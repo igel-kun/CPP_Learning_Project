@@ -73,12 +73,23 @@ void display(void)
 
 void timer(const int step)
 {
-    for (auto& item : move_queue)
-    {
-        item->move();
+
+    for (auto item = move_queue.begin(); item != move_queue.end();){
+        auto obj = *item;
+        obj->move();
+        if ((*item)->delete_asap())
+        {
+            item = move_queue.erase(item);
+            delete obj;
+        }
+        else
+        {
+            item++;
+        }
     }
     glutPostRedisplay();
-    glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+    if (!paused)
+        glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
 }
 
 void init_gl(int argc, char** argv, const char* title)
@@ -111,6 +122,20 @@ void loop()
 void exit_loop()
 {
     glutLeaveMainLoop();
+}
+
+void change_framerate_plus(){
+    ticks_per_sec *= 1.3f;
+}
+
+void change_framerate_minus(){
+    if (ticks_per_sec > 10)
+        ticks_per_sec *= 0.8f;
+}
+
+void pause(){
+    paused = !paused;
+    glutTimerFunc(1000u / ticks_per_sec, timer, 0);
 }
 
 } // namespace GL

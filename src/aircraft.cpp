@@ -49,6 +49,7 @@ void Aircraft::arrive_at_terminal()
     // we arrived at a terminal, so start servicing
     control.arrived_at_terminal(*this);
     is_at_terminal = true;
+    was_at_airport = true;
 }
 
 // deploy and retract landing gear depending on next waypoints
@@ -141,4 +142,12 @@ void Aircraft::move()
 void Aircraft::display() const
 {
     type.texture.draw(project_2D(pos), { PLANE_TEXTURE_DIM, PLANE_TEXTURE_DIM }, get_speed_octant());
+}
+
+bool Aircraft::delete_asap() const
+{
+    if (was_at_airport && !landing_gear_deployed)
+        return true;
+
+    return false;
 }

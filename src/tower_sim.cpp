@@ -40,7 +40,7 @@ void TowerSimulation::create_aircraft(const AircraftType& type) const
     const Point3D direction = (-start).normalize();
 
     Aircraft* aircraft = new Aircraft { type, flight_number, start, direction, airport->get_tower() };
-    GL::display_queue.emplace_back(aircraft);
+    //GL::display_queue.emplace_back(aircraft);
     GL::move_queue.emplace(aircraft);
 }
 
@@ -57,6 +57,10 @@ void TowerSimulation::create_keystrokes() const
     GL::keystrokes.emplace('+', []() { GL::change_zoom(0.95f); });
     GL::keystrokes.emplace('-', []() { GL::change_zoom(1.05f); });
     GL::keystrokes.emplace('f', []() { GL::toggle_fullscreen(); });
+
+    GL::keystrokes.emplace('a', []() { GL::change_framerate_minus(); });
+    GL::keystrokes.emplace('b', []() { GL::change_framerate_plus(); });
+    GL::keystrokes.emplace('p', []() { GL::pause(); });
 }
 
 void TowerSimulation::display_help() const
@@ -77,7 +81,7 @@ void TowerSimulation::init_airport()
     airport = new Airport { one_lane_airport, Point3D { 0, 0, 0 },
                             new img::Image { one_lane_airport_sprite_path.get_full_path() } };
 
-    GL::display_queue.emplace_back(airport);
+    //GL::display_queue.emplace_back(airport);
     GL::move_queue.emplace(airport);
 }
 
