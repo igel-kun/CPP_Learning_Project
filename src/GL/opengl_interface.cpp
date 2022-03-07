@@ -74,18 +74,9 @@ void display(void)
 void timer(const int step)
 {
 
-    for (auto item = move_queue.begin(); item != move_queue.end();){
-        auto obj = *item;
-        obj->move();
-        if ((*item)->delete_asap())
-        {
-            item = move_queue.erase(item);
-            delete obj;
-        }
-        else
-        {
-            item++;
-        }
+    for (auto& item : move_queue)
+    {
+        item->move();
     }
     glutPostRedisplay();
     if (!paused)

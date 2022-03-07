@@ -6,12 +6,22 @@
 
 void AircraftManager::move()
 {
-    for (auto& i : aircrafts){
-        i->move();
+    for (auto item = aircrafts.begin(); item != aircrafts.end();){
+        auto& obj = **item;
+        obj.move();
+        if ((*item)->delete_asap())
+        {
+            item = aircrafts.erase(item);
+        }
+        else
+        {
+            item++;
+        }
     }
+
 }
 
-void AircraftManager::add(const Aircraft& aircraft) const
+void AircraftManager::add(std::unique_ptr<Aircraft> aircraft)
 {
-    aircrafts.emplace_back(std::make_unique<Aircraft>(aircraft));
+    aircrafts.push_back(std::move(aircraft));
 }
