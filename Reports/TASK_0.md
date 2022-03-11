@@ -250,3 +250,13 @@ on utilisera la map suivante :
 ```cpp
 std::map<const Aircraft*, size_t>;
 ```
+
+## D- Théorie
+
+> Comment a-t-on fait pour que seule la classe Tower puisse réserver un terminal de l'aéroport ?
+
+on passe par la manipulation du champs `reserved_terminal` qui est privé et membres de la classe Tower.
+
+> En regardant le contenu de la fonction void Aircraft::turn(Point3D direction), pourquoi selon-vous ne sommes-nous pas passer par une réference ? Pensez-vous qu'il soit possible d'éviter la copie du Point3D passé en paramètre ?
+
+Il n'est possible de passer par une const ref car on utilise la fonction cap_length du Point3D qui va venir le modifier. 
