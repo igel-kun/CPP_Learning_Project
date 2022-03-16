@@ -2,6 +2,7 @@
 
 #include "aircraft.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -16,19 +17,12 @@ public:
 
     bool move() override
     {
-        for (auto it = aircrafts.begin(); it != aircrafts.end();)
-        {
-            auto& aircraft = *it;
-            if (aircraft->move())
-            {
-                ++it;
-            }
-            else
-            {
-                it = aircrafts.erase(it);
-            }
-        }
-
+        aircrafts.erase(std::remove_if(aircrafts.begin(), aircrafts.end(),
+                                       [](const std::unique_ptr<Aircraft>& aircraft)
+                                       { return !aircraft->move(); }),
+                        aircrafts.end());
         return true;
     }
+
+    friend class TowerSimulation;
 };

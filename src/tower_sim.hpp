@@ -3,6 +3,9 @@
 #include "GL/opengl_interface.hpp"
 #include "img/media_path.hpp"
 
+#include <algorithm>
+#include <string>
+
 class Airport;
 class AircraftManager;
 class AircraftFactory;
@@ -27,13 +30,14 @@ private:
     AircraftManager* aircraft_manager = nullptr;
     AircraftFactory* aircraft_factory = nullptr;
     ContextInitializer* context       = nullptr;
+    std::string airline_stat          = "";
 
     TowerSimulation(const TowerSimulation&) = delete;
     TowerSimulation& operator=(const TowerSimulation&) = delete;
 
     void create_random_aircraft() const;
 
-    void create_keystrokes() const;
+    void create_keystrokes();
     void display_help() const;
 
     void init_airport();
