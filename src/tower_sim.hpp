@@ -1,14 +1,15 @@
 #pragma once
 
 #include "GL/opengl_interface.hpp"
+#include "aircraft_factory.hpp"
+#include "aircraft_manager.hpp"
+#include "airport.hpp"
 #include "img/media_path.hpp"
 
 #include <algorithm>
+#include <memory>
 #include <string>
 
-class Airport;
-class AircraftManager;
-class AircraftFactory;
 struct AircraftType;
 
 struct ContextInitializer
@@ -25,12 +26,11 @@ public:
 class TowerSimulation
 {
 private:
-    bool help                         = false;
-    Airport* airport                  = nullptr;
-    AircraftManager* aircraft_manager = nullptr;
-    AircraftFactory* aircraft_factory = nullptr;
-    ContextInitializer* context       = nullptr;
-    std::string airline_stat          = "";
+    bool help = false;
+    std::unique_ptr<Airport> airport;
+    std::unique_ptr<AircraftManager> aircraft_manager;
+    std::unique_ptr<AircraftFactory> aircraft_factory;
+    std::unique_ptr<ContextInitializer> context;
 
     TowerSimulation(const TowerSimulation&) = delete;
     TowerSimulation& operator=(const TowerSimulation&) = delete;
@@ -39,12 +39,12 @@ private:
 
     void create_keystrokes();
     void display_help() const;
+    void print_existing_aircraft(int i);
 
     void init_airport();
 
 public:
     TowerSimulation(int argc, char** argv);
-    ~TowerSimulation();
 
     void launch();
 };
