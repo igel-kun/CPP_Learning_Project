@@ -39,6 +39,8 @@ public:
         }
     }
 
+    void free_me() { current_aircraft = nullptr; }
+
     bool move() override
     {
         if (in_use() && is_servicing())

@@ -43,6 +43,8 @@ private:
         }
     }
 
+    void free_terminal(const size_t terminal_number) { terminals.at(terminal_number).free_me(); }
+
     WaypointQueue start_path(const size_t terminal_number)
     {
         return type.terminal_to_air(pos, 0, terminal_number);
