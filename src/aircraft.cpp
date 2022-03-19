@@ -2,6 +2,7 @@
 
 #include "GL/opengl_interface.hpp"
 
+#include <algorithm>
 #include <cmath>
 
 void Aircraft::turn_to_waypoint()
@@ -134,6 +135,17 @@ bool Aircraft::move()
                 std::cout << flight_number << " has crashed" << std::endl;
                 control.sudden_death(*this);
                 return false;
+            }
+
+            if (!has_terminal())
+            {
+
+                auto ways = control.reserve_terminal(*this);
+                if (!ways.empty())
+                {
+                    waypoints.clear();
+                    std::copy(ways.begin(), ways.end(), std::back_inserter(waypoints));
+                }
             }
 
             // if we are in the air, but too slow, then we will sink!

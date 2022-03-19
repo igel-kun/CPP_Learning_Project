@@ -82,9 +82,6 @@ struct Point3D
 
     Point3D& operator+=(const Point3D& other)
     {
-        // x() += other.x();
-        // y() += other.y();
-        // z() += other.z();
         std::transform(values.begin(), values.end(), other.values.begin(), values.begin(),
                        std::plus<float>());
         return *this;

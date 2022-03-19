@@ -64,7 +64,7 @@ public:
     const std::string& get_flight_num() const { return flight_number; }
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
     bool has_terminal() const { return waypoints.back().is_at_terminal(); }
-    // bool is_circling() const { return waypoints.back() == control.get_circle(); }
+    bool is_circling() const { return !waypoints.back().is_on_ground() && !has_left; }
 
     void display() const override;
     bool move() override;

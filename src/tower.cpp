@@ -60,6 +60,20 @@ WaypointQueue Tower::get_instructions(Aircraft& aircraft)
     }
 }
 
+WaypointQueue Tower::reserve_terminal(Aircraft& aircraft)
+{
+    if (aircraft.is_circling())
+    {
+        const auto vp = airport.reserve_terminal(aircraft);
+        if (!vp.first.empty())
+        {
+            reserved_terminals.emplace(&aircraft, vp.second);
+            return vp.first;
+        }
+    }
+    return {};
+}
+
 void Tower::sudden_death(const Aircraft& aircraft)
 {
     const auto it = reserved_terminals.find(&aircraft);
