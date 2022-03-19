@@ -144,7 +144,7 @@ bool Aircraft::move()
                 if (!ways.empty())
                 {
                     waypoints.clear();
-                    std::copy(ways.begin(), ways.end(), std::back_inserter(waypoints));
+                    std::move(ways.begin(), ways.end(), std::back_inserter(waypoints));
                 }
             }
 
