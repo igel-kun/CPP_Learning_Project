@@ -11,7 +11,7 @@ class AircraftFactory
 private:
     const std::string airlines[8] = { "AF", "LH", "EY", "DL", "KL", "BA", "AY", "EY" };
 
-    void init_aircraft_types();
+    static void init_aircraft_types();
     std::unique_ptr<Aircraft> create_aircraft(const AircraftType& type, Airport* airport);
     std::set<std::string> uniqueAircraft;
 public:
@@ -19,5 +19,6 @@ public:
     std::unique_ptr<Aircraft> create_random_aircraft(Airport* airport);
     void add_name(const std::string& string);
     std::set<std::string> getUniqueAircraft(){return uniqueAircraft;}
+
 };
 

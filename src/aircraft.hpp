@@ -6,7 +6,6 @@
 #include "geometry.hpp"
 #include "tower.hpp"
 #include "waypoint.hpp"
-
 #include <string>
 #include <string_view>
 
@@ -21,6 +20,9 @@ private:
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
     bool was_at_airport        = false;
+    bool out_of_fuel           = false;
+    int index;
+    float fuel                 = rand() % (3000 - 150 + 1) + 150;
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the
@@ -39,7 +41,6 @@ private:
     // deploy and retract landing gear depending on next waypoints
     void operate_landing_gear();
     void add_waypoint(const Waypoint& wp, const bool front);
-    bool is_on_ground() const { return pos.z() < DISTANCE_THRESHOLD; }
     float max_speed() const { return is_on_ground() ? type.max_ground_speed : type.max_air_speed; }
 
     Aircraft(const Aircraft&) = delete;
@@ -47,23 +48,34 @@ private:
 
 public:
     Aircraft(const AircraftType& type_, const std::string_view& flight_number_, const Point3D& pos_,
-             const Point3D& speed_, Tower& control_) :
+             const Point3D& speed_, Tower& control_, int index) :
         GL::Displayable { pos_.x() + pos_.y() },
         type { type_ },
         flight_number { flight_number_ },
         pos { pos_ },
         speed { speed_ },
-        control { control_ }
+        control { control_ },
+        index (index)
     {
         speed.cap_length(max_speed());
     }
 
     const std::string& get_flight_num() const { return flight_number; }
+    int get_index() const{ return index;};
+    float get_fuel() const { return fuel;}
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
 
     void display() const override;
     void move() override;
     bool delete_asap() const override;
+
+    bool has_terminal() const;
+    bool is_circling() const;
+
+    bool is_low_on_fuel() const { return fuel < 200;}
+    bool is_on_ground() const { return pos.z() < DISTANCE_THRESHOLD; }
+
+    void refill(float& fuel_stock);
 
     friend class Tower;
 };

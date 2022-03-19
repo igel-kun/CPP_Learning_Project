@@ -34,17 +34,27 @@ void TowerSimulation::create_keystrokes()
 
     GL::keystrokes.emplace('a', []() { GL::change_framerate_minus(); });
     GL::keystrokes.emplace('b', []() { GL::change_framerate_plus(); });
-    GL::keystrokes.emplace('p', []() { GL::pause(); });
+
+    GL::keystrokes.emplace('0', [this]() { aircraftManager.numberAircraftAirline(0); });
+    GL::keystrokes.emplace('1', [this]() { aircraftManager.numberAircraftAirline(1); });
+    GL::keystrokes.emplace('2', [this]() { aircraftManager.numberAircraftAirline(2); });
+    GL::keystrokes.emplace('3', [this]() { aircraftManager.numberAircraftAirline(3); });
+    GL::keystrokes.emplace('4', [this]() { aircraftManager.numberAircraftAirline(4); });
+    GL::keystrokes.emplace('5', [this]() { aircraftManager.numberAircraftAirline(5); });
+    GL::keystrokes.emplace('6', [this]() { aircraftManager.numberAircraftAirline(6); });
+    GL::keystrokes.emplace('7', [this]() { aircraftManager.numberAircraftAirline(7); });
+
+
 }
 
 void TowerSimulation::display_help() const
 {
     std::cout << "This is an airport tower simulator" << std::endl
-              << "the following keysstrokes have meaning:" << std::endl;
+              << "the following keystrokes have meaning:" << std::endl;
 
-    for (const auto& ks_pair : GL::keystrokes)
+    for (const auto& [key, value] : GL::keystrokes)
     {
-        std::cout << ks_pair.first << ' ';
+        std::cout << key << ' ';
     }
 
     std::cout << std::endl;
@@ -53,7 +63,7 @@ void TowerSimulation::display_help() const
 void TowerSimulation::init_airport()
 {
     airport = new Airport { one_lane_airport, Point3D { 0, 0, 0 },
-                            new img::Image { one_lane_airport_sprite_path.get_full_path() } };
+                            new img::Image { one_lane_airport_sprite_path.get_full_path() }, aircraftManager };
 
     //GL::display_queue.emplace_back(airport);
     GL::move_queue.emplace(airport);

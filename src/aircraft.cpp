@@ -91,6 +91,14 @@ void Aircraft::add_waypoint(const Waypoint& wp, const bool front)
 
 void Aircraft::move()
 {
+
+    if (is_circling() && !has_terminal()){
+        WaypointQueue waypointQueue = control.reserve_terminal(*this);
+        if (!waypointQueue.empty()){
+            waypoints = std::move(waypointQueue);
+        }
+    }
+
     if (waypoints.empty())
     {
         waypoints = control.get_instructions(*this);
@@ -102,7 +110,7 @@ void Aircraft::move()
         // move in the direction of the current speed
         pos += speed;
 
-        // if we are close to our next waypoint, stike if off the list
+        // if we are close to our next waypoint, strike if off the list
         if (!waypoints.empty() && distance_to(waypoints.front()) < DISTANCE_THRESHOLD)
         {
             if (waypoints.front().is_at_terminal())
@@ -132,6 +140,11 @@ void Aircraft::move()
             {
                 pos.z() -= SINK_FACTOR * (SPEED_THRESHOLD - speed_len);
             }
+            fuel--;
+            if (fuel <= 0){
+                out_of_fuel = true;
+                std::cout << "Aircraft " << flight_number << " ran out of fuel! RIP" << std::endl;
+            }
         }
 
         // update the z-value of the displayable structure
@@ -146,8 +159,25 @@ void Aircraft::display() const
 
 bool Aircraft::delete_asap() const
 {
-    if (was_at_airport && !landing_gear_deployed)
-        return true;
+    return (was_at_airport && !landing_gear_deployed) || out_of_fuel;
+}
 
-    return false;
+bool Aircraft::has_terminal() const
+{
+    return !waypoints.empty() && waypoints.back().is_at_terminal();
+}
+
+bool Aircraft::is_circling() const
+{
+    return !is_on_ground() && !was_at_airport;
+}
+void Aircraft::refill(float& fuel_stock)
+{
+    assert(fuel_stock >= 0.f);
+    const auto refill = 3000 - fuel < fuel_stock ? 3000 - fuel : fuel_stock;
+    fuel += refill;
+    fuel_stock -= refill;
+    if(refill > 0.f){
+        std::cout << flight_number << "was refilled with " << refill << "units of fuel" << std::endl;
+    }
 }
