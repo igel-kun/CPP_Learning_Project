@@ -32,5 +32,5 @@ public:
     WaypointQueue get_instructions(Aircraft& aircraft);
     WaypointQueue reserve_terminal(Aircraft& aircraft);
     void arrived_at_terminal(const Aircraft& aircraft);
-    void sudden_death(const Aircraft& aircraft);
+    void unregister_on_crash(const Aircraft& aircraft);
 };

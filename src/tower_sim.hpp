@@ -7,6 +7,8 @@
 #include "img/media_path.hpp"
 
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 #include <string>
 
@@ -14,7 +16,6 @@ struct AircraftType;
 
 struct ContextInitializer //===================> SEGFAUUUUUUUUUULT
 {
-public:
     ContextInitializer(int argc, char** argv)
     {
         MediaPath::initialize(argv[0]);

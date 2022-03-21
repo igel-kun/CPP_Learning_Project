@@ -11,8 +11,6 @@ AircraftFactory::AircraftFactory() :
 std::unique_ptr<Aircraft> AircraftFactory::create_aircraft(Tower& tower)
 {
     std::string flight_number;
-    int min_fuel = 150;
-    int max_fuel = 3000;
 
     do
     {

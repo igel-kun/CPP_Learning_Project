@@ -61,7 +61,7 @@ public:
         speed.cap_length(max_speed());
     }
 
-    ~Aircraft() { control.sudden_death(*this); }
+    ~Aircraft() { control.unregister_on_crash(*this); }
 
     const std::string& get_flight_num() const { return flight_number; }
     bool is_low_on_fuel() const { return fuel < 200; }

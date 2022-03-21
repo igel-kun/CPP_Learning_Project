@@ -5,8 +5,6 @@
 #include "img/image.hpp"
 
 #include <cassert>
-#include <cstdlib>
-#include <ctime>
 
 using namespace std::string_literals;
 

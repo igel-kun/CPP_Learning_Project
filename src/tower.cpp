@@ -74,7 +74,7 @@ WaypointQueue Tower::reserve_terminal(Aircraft& aircraft)
     return {};
 }
 
-void Tower::sudden_death(const Aircraft& aircraft)
+void Tower::unregister_on_crash(const Aircraft& aircraft)
 {
     const auto it = reserved_terminals.find(&aircraft);
     if (it != reserved_terminals.end())
