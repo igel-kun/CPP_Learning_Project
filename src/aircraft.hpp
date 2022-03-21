@@ -61,14 +61,17 @@ public:
         speed.cap_length(max_speed());
     }
 
+    ~Aircraft() { control.sudden_death(*this); }
+
     const std::string& get_flight_num() const { return flight_number; }
-    int get_fuel() const { return fuel; }
+    bool is_low_on_fuel() const { return fuel < 200; }
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
     bool has_terminal() const { return !waypoints.empty() && waypoints.back().is_at_terminal(); }
     bool is_circling() const { return !waypoints.empty() && !waypoints.back().is_on_ground() && !has_left; }
-
+    void refill(int& fuel_stock);
     void display() const override;
     bool move() override;
 
     friend class Tower;
+    friend class AircraftManager;
 };

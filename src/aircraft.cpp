@@ -133,7 +133,6 @@ bool Aircraft::move()
             if (--fuel <= 0)
             {
                 std::cout << flight_number << " has crashed" << std::endl;
-                control.sudden_death(*this);
                 return false;
             }
 
@@ -161,6 +160,17 @@ bool Aircraft::move()
     }
 
     return true;
+}
+
+void Aircraft::refill(int& fuel_stock)
+{
+    if (is_at_terminal && fuel_stock > 0)
+    {
+        int need = 3000 - fuel > fuel_stock ? fuel_stock : 3000 - fuel;
+        fuel += need;
+        fuel_stock -= need;
+        std::cout << flight_number << " has been restocked with " << need << "L of fuel" << std::endl;
+    }
 }
 
 void Aircraft::display() const

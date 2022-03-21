@@ -12,7 +12,7 @@
 
 struct AircraftType;
 
-struct ContextInitializer
+struct ContextInitializer //===================> SEGFAUUUUUUUUUULT
 {
 public:
     ContextInitializer(int argc, char** argv)
