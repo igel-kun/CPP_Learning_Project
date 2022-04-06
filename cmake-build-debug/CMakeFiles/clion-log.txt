@@ -1,0 +1,6 @@
+/home/natan/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/natan/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/213.6461.75/bin/ninja/linux/ninja -G Ninja /home/natan/Documents/M1/S8/C++/CPP_Learning_Project
+-- Could NOT find FreeGLUT (missing: FreeGLUT_DIR)
+Library GLUT found.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/natan/Documents/M1/S8/C++/CPP_Learning_Project/cmake-build-debug

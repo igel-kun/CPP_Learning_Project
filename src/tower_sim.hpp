@@ -29,16 +29,16 @@ class TowerSimulation
 private:
     bool help        = false;
     Airport* airport = nullptr;
-    mutable AircraftManager aircraftManager;
+    AircraftManager aircraftManager;
     ContextInitialiser _contextInitialiser;
-    mutable AircraftFactory aircraftFactory;
+    AircraftFactory aircraftFactory;
 
     TowerSimulation(const TowerSimulation&) = delete;
     TowerSimulation& operator=(const TowerSimulation&) = delete;
 
     void create_random_aircraft();
 
-    void create_keystrokes() const;
+    void create_keystrokes();
     void display_help() const;
 
     void init_airport();

@@ -26,9 +26,14 @@ private:
 
 
 public:
+
+    AircraftToTerminal get_reserved_terminal() { return reserved_terminals; }
+
     Tower(Airport& airport_) : airport { airport_ } {}
 
     // produce instructions for aircraft
     WaypointQueue get_instructions(Aircraft& aircraft);
     void arrived_at_terminal(const Aircraft& aircraft);
+
+    WaypointQueue reserve_terminal(Aircraft& aircraft);
 };

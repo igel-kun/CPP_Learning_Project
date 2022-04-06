@@ -77,9 +77,10 @@ void Aircraft::operate_landing_gear()
     }
 }
 
-void Aircraft::add_waypoint(const Waypoint& wp, const bool front)
+template <bool front>
+void Aircraft::add_waypoint(const Waypoint& wp)
 {
-    if (front)
+    if constexpr (front)
     {
         waypoints.push_front(wp);
     }
@@ -91,13 +92,33 @@ void Aircraft::add_waypoint(const Waypoint& wp, const bool front)
 
 void Aircraft::move()
 {
+    this->fuel--;
+
+    if(fuel <= 0)
+    {
+        throw AircraftCrash {flight_number + " out of fuel then crashed " };
+    }
+
     if (waypoints.empty())
     {
-        waypoints = control.get_instructions(*this);
+        //auto front = false;
+        for (const auto& wp: control.get_instructions(*this))
+        {
+            add_waypoint<false>(wp);
+        }
     }
 
     if (!is_at_terminal)
     {
+        if(is_circling())
+        {
+            auto path = control.reserve_terminal(*this);
+            if(!path.empty())
+            {
+                waypoints = std::move(path);
+            }
+        }
+
         turn_to_waypoint();
         // move in the direction of the current speed
         pos += speed;
@@ -105,8 +126,12 @@ void Aircraft::move()
         // if we are close to our next waypoint, stike if off the list
         if (!waypoints.empty() && distance_to(waypoints.front()) < DISTANCE_THRESHOLD)
         {
+
+            //std::cout << "avant : " << distance_to(waypoints.front()) << "  pos: " << waypoints.front() << std::endl;
+
             if (waypoints.front().is_at_terminal())
             {
+
                 arrive_at_terminal();
             }
             else
@@ -143,3 +168,61 @@ void Aircraft::display() const
 {
     type.texture.draw(project_2D(pos), { PLANE_TEXTURE_DIM, PLANE_TEXTURE_DIM }, get_speed_octant());
 }
+
+
+
+
+bool Aircraft::has_terminal() const
+{
+    if(control.get_reserved_terminal().find(this) != control.get_reserved_terminal().end()){
+        return true;
+    }
+    return false;
+}
+
+bool Aircraft::is_circling() const
+{
+    return !has_terminal();
+}
+
+bool Aircraft::operator<(const Aircraft& other)
+{
+    if (has_terminal())
+    {
+        if(other.has_terminal())
+        {
+            return fuel < other.fuel;
+        }
+        return true;
+    }
+    else
+    {
+        if(other.has_terminal())
+        {
+            return false;
+        }
+        return fuel < other.fuel;
+    }
+}
+
+bool Aircraft::is_low_on_fuel() const {
+    if(this->fuel < 200)
+    {
+        return true;
+    }
+    return false;
+}
+
+void Aircraft::refill(int &fuel_stock) {
+    //std::cout << "fuel_stock : " << fuel_stock << std::endl;
+    int need_fuel = 3000 - fuel;
+    int fuel_loaded = fuel_stock > need_fuel ? need_fuel : fuel_stock;
+    //std::cout << "need fuel : " << need_fuel  << " fuel loaded : " << fuel_loaded << " fuel stock " << fuel_stock << std::endl;
+    if(fuel_stock > 0)
+    {
+        fuel_stock -= fuel_loaded;
+        fuel += fuel_loaded;
+        std::cout << "Aircraft " << flight_number << " is being refilled with " << fuel_loaded << " of fuel." << std::endl;
+    }
+}
+

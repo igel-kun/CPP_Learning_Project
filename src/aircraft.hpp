@@ -15,13 +15,14 @@ class Aircraft : public GL::Displayable, public GL::DynamicObject
 private:
     const AircraftType& type;
     const std::string flight_number;
+    const int airline;
     Point3D pos, speed; // note: the speed should always be normalized to length 'speed'
     WaypointQueue waypoints = {};
     Tower& control;
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
-    bool was_at_airport;
-
+    bool was_at_airport        = false;
+    int fuel = (rand()%2850)+150;
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the
@@ -38,18 +39,21 @@ private:
     void arrive_at_terminal();
     // deploy and retract landing gear depending on next waypoints
     void operate_landing_gear();
-    void add_waypoint(const Waypoint& wp, const bool front);
+
+    template<bool front>
+    void add_waypoint(const Waypoint& wp);
     bool is_on_ground() const { return pos.z() < DISTANCE_THRESHOLD; }
-    float max_speed() const { return is_on_ground() ? type.max_ground_speed : type.max_air_speed; }
+    float max_speed() const {return is_on_ground() ? type.max_ground_speed : type.max_air_speed; }
 
     Aircraft& operator=(const Aircraft&) = delete;
 
 public:
-    Aircraft(const AircraftType& type_, const std::string_view& flight_number_, const Point3D& pos_,
+    Aircraft(const AircraftType& type_, const std::string_view& flight_number_, const int airline_, const Point3D& pos_,
              const Point3D& speed_, Tower& control_) :
         GL::Displayable { pos_.x() + pos_.y() },
         type { type_ },
         flight_number { flight_number_ },
+        airline {airline_},
         pos { pos_ },
         speed { speed_ },
         control { control_ }
@@ -57,7 +61,7 @@ public:
         speed.cap_length(max_speed());
     }
 
-
+    int get_aircraft_airline() const { return airline; }
     const std::string& get_flight_num() const { return flight_number; }
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
 
@@ -66,12 +70,27 @@ public:
 
     bool del_object() const override
     {
-        if(was_at_airport && !landing_gear_deployed)
+        if(this->was_at_airport && !this->landing_gear_deployed)
         {
+            return true;
+        }
+        if(this->fuel==0) 
+        {
+            std::cout << "Aircraft " << this->get_flight_num() << " has crashed" << std::endl;
             return true;
         }
         return false;
     }
+
+    bool has_terminal() const;
+    bool is_circling() const;
+
+    bool operator<(const Aircraft&);
+    bool is_low_on_fuel() const;
+
+    int get_fuel(){return fuel;}
+    bool at_terminal() const {return is_at_terminal;}
+    void refill(int& fuel_stock);
 
     friend class Tower;
 
