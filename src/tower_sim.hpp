@@ -2,6 +2,7 @@
 
 #include "AircraftManager.hpp"
 #include "AircraftFactory.hpp"
+
 class Airport;
 struct AircraftType;
 
@@ -19,7 +20,7 @@ public:
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
         GL::init_gl(argc, argv, "Airport Tower Simulation");
     }
-    int getArgc() { return _argc;}
+    int getArgc() const { return _argc;}
     char** getArgv() { return _argv;}
 };
 
@@ -28,26 +29,24 @@ class TowerSimulation
 private:
     bool help        = false;
     Airport* airport = nullptr;
-    ContextInitializer _contextInitializer;
     AircraftManager aircraftManager;
     AircraftFactory aircraftFactory;
 
-    TowerSimulation(const TowerSimulation&) = delete;
-    TowerSimulation& operator=(const TowerSimulation&) = delete;
 
     void create_aircraft();
 
     void create_keystrokes();
-    void display_help() const;
+    static void display_help() ;
 
     void init_airport();
     void init_aircraftManager();
 
 public:
+    TowerSimulation(const TowerSimulation&) = delete;
+    TowerSimulation& operator=(const TowerSimulation&) = delete;
 
     TowerSimulation(ContextInitializer& contextInitializer) :
-        help {(contextInitializer.getArgc() > 1) && (std::string { contextInitializer.getArgv()[1] } == "--help" || std::string { contextInitializer.getArgv()[1] } == "-h") },
-        _contextInitializer {contextInitializer}
+        help {(contextInitializer.getArgc() > 1) && (std::string { contextInitializer.getArgv()[1] } == "--help" || std::string { contextInitializer.getArgv()[1] } == "-h") }
     {
         create_keystrokes();
     }

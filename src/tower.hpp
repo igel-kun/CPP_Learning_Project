@@ -19,11 +19,11 @@ private:
     //using AircraftAndTerminalIter = AircraftToTerminal::iterator;
 
     Airport& airport;
-    // aircrafts may reserve a terminal
+    // aircraft may reserve a terminal
     // if so, we need to save the terminal number in order to liberate it when the craft leaves
     AircraftToTerminal reserved_terminals = {};
 
-    WaypointQueue get_circle() const;
+    static WaypointQueue get_circle() ;
 
     /*AircraftAndTerminalIter find_craft_and_terminal(const Aircraft& aircraft)
     {
@@ -38,4 +38,5 @@ public:
     WaypointQueue get_instructions(Aircraft& aircraft);
     void arrived_at_terminal(const Aircraft& aircraft);
     WaypointQueue reserve_terminal(Aircraft& aircraft);
+    void delete_crashed_aircraft(const Aircraft& aircraft);
 };

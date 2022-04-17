@@ -34,6 +34,7 @@ void change_zoom(const float factor);
 void init_gl(int argc, char** argv, const char* title);
 void loop();
 void exit_loop();
+
 void change_framerate_plus();
 void change_framerate_minus();
 void pause();

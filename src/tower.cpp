@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-WaypointQueue Tower::get_circle() const
+WaypointQueue Tower::get_circle()
 {
     return { { Point3D { -1.5f, -1.5f, .5f }, wp_air },
              { Point3D { 1.5f, -1.5f, .5f }, wp_air },
@@ -46,6 +46,7 @@ WaypointQueue Tower::get_instructions(Aircraft& aircraft)
         Terminal& terminal      = airport.get_terminal(terminal_num);
         if (!terminal.is_servicing())
         {
+            aircraft.was_at_airport = true;
             terminal.finish_service();
             reserved_terminals.erase(it);
             aircraft.is_at_terminal = false;
@@ -71,4 +72,13 @@ WaypointQueue Tower::reserve_terminal(Aircraft& aircraft)
     if (!vp.first.empty())
         reserved_terminals.emplace(&aircraft, vp.second);
     return vp.first;
+}
+
+void Tower::delete_crashed_aircraft(const Aircraft& aircraft)
+{
+    const auto it = reserved_terminals.find(&aircraft);
+    if ( it != reserved_terminals.end()){
+        airport.free_term(it->second);
+        reserved_terminals.erase(it);
+    }
 }

@@ -16,6 +16,8 @@ TowerSimulation::~TowerSimulation()
 
 void TowerSimulation::create_aircraft()
 {
+    assert(airport);
+
     std::unique_ptr<Aircraft> aircraft = aircraftFactory.create_random_aircraft(airport);
 
     aircraftManager.add(std::move(aircraft));
@@ -34,6 +36,7 @@ void TowerSimulation::create_keystrokes()
 
     GL::keystrokes.emplace('a', []() { GL::change_framerate_minus(); });
     GL::keystrokes.emplace('b', []() { GL::change_framerate_plus(); });
+    GL::keystrokes.emplace('p', []() { GL::pause(); });
 
     GL::keystrokes.emplace('0', [this]() { aircraftManager.numberAircraftAirline(0); });
     GL::keystrokes.emplace('1', [this]() { aircraftManager.numberAircraftAirline(1); });
@@ -44,10 +47,14 @@ void TowerSimulation::create_keystrokes()
     GL::keystrokes.emplace('6', [this]() { aircraftManager.numberAircraftAirline(6); });
     GL::keystrokes.emplace('7', [this]() { aircraftManager.numberAircraftAirline(7); });
 
+    GL::keystrokes.emplace('m', [this]() { std::cout << "Total aircraft crashed : " << aircraftManager.getCrash() << std::endl;});
+
+
+
 
 }
 
-void TowerSimulation::display_help() const
+void TowerSimulation::display_help()
 {
     std::cout << "This is an airport tower simulator" << std::endl
               << "the following keystrokes have meaning:" << std::endl;
@@ -62,8 +69,11 @@ void TowerSimulation::display_help() const
 
 void TowerSimulation::init_airport()
 {
+    assert(!airport);
+
     airport = new Airport { one_lane_airport, Point3D { 0, 0, 0 },
-                            new img::Image { one_lane_airport_sprite_path.get_full_path() }, aircraftManager };
+                            new img::Image { one_lane_airport_sprite_path.get_full_path() },
+                            aircraftManager };
 
     //GL::display_queue.emplace_back(airport);
     GL::move_queue.emplace(airport);

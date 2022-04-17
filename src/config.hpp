@@ -11,10 +11,10 @@ const MediaPath two_lane_airport_sprite_path = { "airport_2lane.png" };
 constexpr unsigned int SERVICE_CYCLES = 40u; // was 20u
 // speeds below the threshold speed loose altitude linearly
 constexpr float SPEED_THRESHOLD = 0.05f;
-// this models the speed with wich slow (speed < SPEED_THRESHOLD) aircrafts sink
+// this models the speed with which slow (speed < SPEED_THRESHOLD) aircrafts sink
 constexpr float SINK_FACTOR = 0.1f;
 // distances below this distance are considered equal (planes crash, waypoints
-// are reached, etc)
+// are reached, etc.)
 constexpr float DISTANCE_THRESHOLD = 0.05f;
 // each aircraft sprite has 8 tiles
 constexpr unsigned char NUM_AIRCRAFT_TILES = 8;

@@ -49,7 +49,7 @@ void Aircraft::arrive_at_terminal()
     // we arrived at a terminal, so start servicing
     control.arrived_at_terminal(*this);
     is_at_terminal = true;
-    was_at_airport = true;
+    //was_at_airport = true;
 }
 
 // deploy and retract landing gear depending on next waypoints
@@ -101,6 +101,10 @@ void Aircraft::move()
 
     if (waypoints.empty())
     {
+        if (was_at_airport){
+            can_destroy = true;
+            return;
+        }
         waypoints = control.get_instructions(*this);
     }
 
@@ -140,10 +144,13 @@ void Aircraft::move()
             {
                 pos.z() -= SINK_FACTOR * (SPEED_THRESHOLD - speed_len);
             }
-            fuel--;
-            if (fuel <= 0){
-                out_of_fuel = true;
-                std::cout << "Aircraft " << flight_number << " ran out of fuel! RIP" << std::endl;
+            if (fuel != 0.f){
+                fuel--;
+            }
+            if (fuel <= 0.f){
+                can_destroy = true;
+                control.delete_crashed_aircraft(*this);
+                throw AircraftCrash("Aircraft " + flight_number + " ran out of fuel! RIP");
             }
         }
 
@@ -159,7 +166,7 @@ void Aircraft::display() const
 
 bool Aircraft::delete_asap() const
 {
-    return (was_at_airport && !landing_gear_deployed) || out_of_fuel;
+    return can_destroy;
 }
 
 bool Aircraft::has_terminal() const
@@ -174,10 +181,11 @@ bool Aircraft::is_circling() const
 void Aircraft::refill(float& fuel_stock)
 {
     assert(fuel_stock >= 0.f);
-    const auto refill = 3000 - fuel < fuel_stock ? 3000 - fuel : fuel_stock;
+    const auto refill = 3000 - fuel > fuel_stock ? fuel_stock : 3000 - fuel;
     fuel += refill;
     fuel_stock -= refill;
-    if(refill > 0.f){
-        std::cout << flight_number << "was refilled with " << refill << "units of fuel" << std::endl;
+    if (refill > 0.f)
+    {
+        std::cout << flight_number << " was refilled with " << refill << " units of fuel" << std::endl;
     }
 }

@@ -58,6 +58,9 @@ public:
     WaypointQueue terminal_to_air(const Point3D& offset, const size_t runway_num,
                                   const size_t terminal_num) const
     {
+        assert(runway_num < runways.size());
+        assert(terminal_num < terminal_pos.size());
+
         const Runway& runway = runways.at(runway_num);
         const float angle    = (rand() % 1000) * 2 * 3.141592f / 1000.f; // random angle between 0 and 2pi
 

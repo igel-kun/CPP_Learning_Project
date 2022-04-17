@@ -13,10 +13,10 @@ private:
     Aircraft* current_aircraft = nullptr;
     const Point3D pos;
 
-    Terminal(const Terminal&) = delete;
-    Terminal& operator=(const Terminal&) = delete;
 
 public:
+    Terminal(const Terminal&) = delete;
+    Terminal& operator=(const Terminal&) = delete;
     Terminal(const Point3D& pos_) : pos { pos_ } {}
 
     bool in_use() const { return current_aircraft != nullptr; }
@@ -52,10 +52,14 @@ public:
     void refill_aircraft_if_needed(float& fuel_stock) const
     {
         assert(fuel_stock >= 0.f);
-        if (current_aircraft->is_low_on_fuel() && current_aircraft->is_on_ground())
+        if (current_aircraft->is_low_on_fuel())
         {
             current_aircraft->refill(fuel_stock);
         }
+    }
+
+    void free(){
+        current_aircraft = nullptr;
     }
 
 };

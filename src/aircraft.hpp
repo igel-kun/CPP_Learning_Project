@@ -20,9 +20,11 @@ private:
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
     bool was_at_airport        = false;
-    bool out_of_fuel           = false;
+    //bool out_of_fuel           = false;
     int index;
-    float fuel                 = rand() % (3000 - 150 + 1) + 150;
+    float fuel                 = std::rand() % (3000 - 150 + 1) + 150;
+
+    bool can_destroy = false;
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the

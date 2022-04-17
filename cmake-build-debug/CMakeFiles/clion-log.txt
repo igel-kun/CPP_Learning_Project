@@ -1,5 +1,7 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/xhavit/Desktop/S2/C++/CPP_Learning_Project
-Library FreeGLUT found.
+-- Could NOT find FreeGLUT (missing: FreeGLUT_DIR)
+-- Found GLUT: /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/GLUT.framework  
+Library GLUT found.
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /Users/xhavit/Desktop/S2/C++/CPP_Learning_Project/cmake-build-debug

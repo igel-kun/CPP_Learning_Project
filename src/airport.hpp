@@ -50,10 +50,12 @@ private:
 
     WaypointQueue start_path(const size_t terminal_number)
     {
+        assert(terminal_number < terminals.size());
         return type.terminal_to_air(pos, 0, terminal_number);
     }
 
     Terminal& get_terminal(const size_t terminal_num) { return terminals.at(terminal_num); }
+    void free_term(const size_t terminal_number) { terminals.at(terminal_number).free(); }
 
 public:
     Airport(const AirportType& type_, const Point3D& pos_, const img::Image* image, const AircraftManager& aircraftManager, const float z_ = 1.0f) :
@@ -73,24 +75,20 @@ public:
     void move() override
     {
 
-        if(next_refill_time <= 0){
-            fuel_stock += ordered_fuel;
-            const auto required_fuel = aircraftManager.get_required_fuel();
-            if (fuel_stock >= required_fuel){
-                ordered_fuel = 0;
-            }
-            else{
-                ordered_fuel = std::min(required_fuel, 5000.f);
-                std::cout << "Fuel received: " << ordered_fuel - fuel_stock << ", Fuel in stock: " << fuel_stock << ", Fuel ordered: " << ordered_fuel << std::endl;
-            }
-            next_refill_time = 100;
-        }
+        if(next_refill_time <= 0.f){
 
-        for (auto& t : terminals)
-        {
-            t.move(fuel_stock);
+            auto required_fuel = aircraftManager.get_required_fuel();
+            ordered_fuel = required_fuel < 5000 ? required_fuel : 5000;
+            fuel_stock += ordered_fuel;
+            std::cout << "Fuel stock : " << fuel_stock
+                      << ", Needed fuel : " << required_fuel
+                      << ", Received fuel : " << ordered_fuel << std::endl;
+            next_refill_time = 100.f;
         }
         next_refill_time--;
+        for (auto& terminal: terminals){
+            terminal.move(fuel_stock);
+        }
     }
 
     friend class Tower;
