@@ -19,8 +19,6 @@ std::unique_ptr<Aircraft> AircraftFactory::create_aircraft(const AircraftType& t
     const Point3D direction = (-start).normalize();
 
     std::unique_ptr<Aircraft> aircraft = std::make_unique<Aircraft>( type, flight_number, start, direction, airport->get_tower(), index);
-    //GL::display_queue.emplace_back(aircraft);
-    //GL::move_queue.emplace(aircraft);
 
     return aircraft;
 }
@@ -28,11 +26,6 @@ std::unique_ptr<Aircraft> AircraftFactory::create_aircraft(const AircraftType& t
 std::unique_ptr<Aircraft> AircraftFactory::create_random_aircraft(Airport* airport)
 {
     return create_aircraft(*(aircraft_types[rand() % 3]), airport);
-}
-
-void AircraftFactory::add_name(const std::string& string)
-{
-    uniqueAircraft.emplace(string);
 }
 
 void AircraftFactory::init_aircraft_types()

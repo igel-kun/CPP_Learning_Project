@@ -20,7 +20,6 @@ private:
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
     bool was_at_airport        = false;
-    //bool out_of_fuel           = false;
     int index;
     float fuel                 = std::rand() % (3000 - 150 + 1) + 150;
 

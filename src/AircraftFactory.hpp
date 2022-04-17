@@ -18,8 +18,6 @@ private:
 public:
     AircraftFactory() { init_aircraft_types(); }
     std::unique_ptr<Aircraft> create_random_aircraft(Airport* airport);
-    void add_name(const std::string& string);
-    std::set<std::string> getUniqueAircraft(){return uniqueAircraft;}
 
 };
 
