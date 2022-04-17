@@ -70,16 +70,17 @@ void Aircraft::operate_landing_gear()
             std::cout << flight_number << " is now landing..." << std::endl;
             landing_gear_deployed = true;
         }
-        else if (!ground_before && !ground_after)
+        else if (!ground_before)
         {
             landing_gear_deployed = false;
         }
     }
 }
 
-void Aircraft::add_waypoint(const Waypoint& wp, const bool front)
+template <bool front>
+void Aircraft::add_waypoint(const Waypoint& wp)
 {
-    if (front)
+    if constexpr (front)
     {
         waypoints.push_front(wp);
     }
@@ -105,7 +106,10 @@ void Aircraft::move()
             can_destroy = true;
             return;
         }
-        waypoints = control.get_instructions(*this);
+        for (const auto& wp: control.get_instructions(*this))
+        {
+            add_waypoint<false>(wp);
+        }
     }
 
     if (!is_at_terminal)
